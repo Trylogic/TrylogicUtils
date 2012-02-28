@@ -1,3 +1,5 @@
 
 /sdk
 /out
+/build.ivy.xml
+/ivysettings.xml
