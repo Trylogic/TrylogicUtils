@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IvyHelper" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<property name="ivy.install.version" value="2.2.0" />
+	<property name="ivy.jar.file" value="${user.home}/ivy.jar" />
+
+	<target name="-download-ivy" unless="skip.download">
+		<echo message="installing ivy..." />
+		<dirname property="destdir" file="${ivy.jar.file}" />
+		<mkdir dir="${destdir}" />
+		<get src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+			 dest="${ivy.jar.file}" usetimestamp="true" />
+	</target>
+
+	<target name="-install-ivy" depends="-download-ivy" description="--> install ivy">
+
+		<dirname property="destdir" file="${ivy.jar.file}" />
+		<path id="ivy.lib.path">
+			<fileset dir="${destdir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+	</target>
+
+	<target name="update" depends="-install-ivy" description="Download project dependencies">
+		<ivy:settings file="ivysettings.xml" />
+		<ivy:retrieve />
+	</target>
+</project>
