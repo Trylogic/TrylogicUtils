@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ivy-module version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+<ivy-module version="1.0">
 
-	<info organisation="trylogic" module="TrylogicUtils" revision="1.0" status="integration" publication="20120228221421"/>
-
-	<configurations>
-		<conf name="all"/>
-	</configurations>
+	<info organisation="trylogic" module="TrylogicUtils" revision="1.0" status="release" publication="20120228222700"/>
 
 	<publications>
-		<artifact name="TrylogicUtils" type="swc" ext="swc" conf="all"/>
+		<artifact name="TrylogicUtils" type="swc" ext="swc"/>
 	</publications>
 
 </ivy-module>
