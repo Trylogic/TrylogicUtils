@@ -6,7 +6,7 @@
 
 	<artifactId>trylogic-utils</artifactId>
 	<packaging>swc</packaging>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>${module.trylogic-utils.version}</version>
 
 	<parent>
 		<groupId>ru.trylogic</groupId>
@@ -15,18 +15,17 @@
 	</parent>
 
 	<build>
-			<plugins>
-				<plugin>
-					<groupId>org.sonatype.flexmojos</groupId>
-					<artifactId>flexmojos-maven-plugin</artifactId>
-					<configuration>
-						<skipTest>true</skipTest>
-						<skipTests>true</skipTests>
-						<storepass />
-					</configuration>
-				</plugin>
-			</plugins>
-
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<configuration>
+					<skipTest>true</skipTest>
+					<skipTests>true</skipTests>
+					<storepass/>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>
