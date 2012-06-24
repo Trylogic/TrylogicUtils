@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><ivy-module version="1.0">	<info organisation="trylogic" module="TrylogicUtils" revision="1.0" />	<publications>		<artifact name="TrylogicUtils" type="swc" ext="swc" />	</publications></ivy-module>

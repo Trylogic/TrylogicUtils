@@ -1,5 +1,6 @@
-
-/sdk
-/out
-/build.ivy.xml
-/ivysettings.xml
+.DS_Store
+.idea/
+*.iws
+*.iml
+*.ipr
+target/
