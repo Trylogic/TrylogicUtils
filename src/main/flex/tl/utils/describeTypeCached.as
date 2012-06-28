@@ -1,14 +1,15 @@
 ﻿package tl.utils
 {
+
 	import flash.utils.describeType;
 
 	/**
 	 * Describe type cached. Didnt't safe reference to passed object.
 	 *
-	 * @see	flash.utils.describeType
+	 * @see    flash.utils.describeType
 	 *
-	 * @param type	Object or Class
-	 * @return	Same as <code>flash.utils.describeType</code> return value
+	 * @param type    Object or Class
+	 * @return    Same as <code>flash.utils.describeType</code> return value
 	 */
 	public function describeTypeCached( type : * ) : XML
 	{

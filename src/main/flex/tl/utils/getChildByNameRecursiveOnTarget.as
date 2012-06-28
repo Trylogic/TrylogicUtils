@@ -1,5 +1,6 @@
 package tl.utils
 {
+
 	import flash.display.*;
 
 	public function getChildByNameRecursiveOnTarget( name : String, target : DisplayObjectContainer ) : DisplayObject
