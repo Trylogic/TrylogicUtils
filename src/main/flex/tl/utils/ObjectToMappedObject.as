@@ -1,1 +1,112 @@
-package tl.utils{	import flash.net.getClassByAlias;	import flash.utils.getDefinitionByName;	public class ObjectToMappedObject	{		public static function parseObject( obj : Object, objectClass : Class = null ) : Object		{			if ( objectClass != null )			{			}			else if ( obj.hasOwnProperty( "_metaClassName" ) )			{				objectClass = getClassByAlias( obj._metaClassName );			}			else			{				objectClass = Object;			}			var instance : Object = new (objectClass)();			var desc : XMLList = describeTypeCached( instance ).variable;			for ( var prop : String in obj )			{				if ( prop != "_metaClassName" )				{					var propertyType : String = desc.(@name.toString() == prop).@type.toString();					var value : *;					// If type isn't founded, or it's simple type (See ECMAScript specs)					if ( propertyType == "" ||							propertyType == "String" ||							propertyType == "Number" ||							propertyType == "uint" ||							propertyType == "int" ||							propertyType == "Boolean"							)					{						value = obj[prop];					}					// If propertyType is Vector, create and fill it					else if ( propertyType.indexOf( "__AS3__.vec::Vector." ) != -1 )					{						value = new (getDefinitionByName( propertyType ))();						var vectorInnerType : String = propertyType.substr( 21, propertyType.length - 22 );						for each( var innerData : * in obj[prop] )						{							// If type is a simple type (See ECMAScript specs)							if ( vectorInnerType == "" ||									vectorInnerType == "String" ||									vectorInnerType == "Number" ||									vectorInnerType == "uint" ||									vectorInnerType == "int" ||									vectorInnerType == "Boolean"									)							{								value.push( innerData );							}							else							{								value.push( parseObject( innerData, getDefinitionByName( vectorInnerType ) as Class ) );							}						}					}					// Else (if it's Object, or some custom type) just parse it recursive					else					{						value = parseObject( obj[prop], getDefinitionByName( propertyType ) as Class );					}					instance[prop] = value;				}			}			return instance;		}	}}
+package tl.utils
+{
+
+	import flash.system.ApplicationDomain;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
+
+	public class ObjectToMappedObject
+	{
+		private static const vectorPrefix : String = "__AS3__.vec::Vector.";
+
+		public static function parseObject( obj : *, objectClass : Class = null ) : *
+		{
+			if ( objectIsSimple( obj ) )
+			{
+				return obj;
+			}
+
+			// Parsing vector
+			if ( objectClass != null && obj is Array )
+			{
+				const resultVector : * = new (objectClass)();
+
+				const qualifiedClassName : String = getQualifiedClassName( objectClass );
+				const vectorInnerTypeString : String = qualifiedClassName.substr( vectorPrefix.length + 1, qualifiedClassName.length - vectorPrefix.length - 2 );
+				const vectorInnerType : Class = typeStringIsSimple( vectorInnerTypeString ) ? null : ApplicationDomain.currentDomain.getDefinition( vectorInnerTypeString ) as Class;
+
+				for each( var innerData : * in obj )
+				{
+					resultVector.push( parseObject( innerData, vectorInnerType ) );
+				}
+
+				return resultVector;
+			}
+
+			// Parsing array
+			if ( obj is Array )
+			{
+				const resultArray : Array = [];
+
+				for each( var innerVectorData : * in obj )
+				{
+					resultArray.push( parseObject( innerVectorData ) );
+				}
+
+				return resultArray;
+			}
+
+			// Parsing object
+			if ( objectClass != null )
+			{
+
+			}
+			else if ( obj.hasOwnProperty( "new" ) )
+			{
+				objectClass = ApplicationDomain.currentDomain.getDefinition( obj["new"] ) as Class;
+			}
+			else
+			{
+				objectClass = Object;
+			}
+
+			var instance : Object = new (objectClass)();
+
+			var desc : XMLList = describeTypeCached( instance ).variable;
+
+			for ( var prop : String in obj )
+			{
+				if ( prop == "new" )
+				{
+					continue;
+				}
+
+				var propertyType : String = desc.(@name.toString() == prop).@type.toString();
+
+				// If type isn't founded, or it's simple type
+				if ( typeStringIsSimple( propertyType ) )
+				{
+					instance[prop] = obj[prop];
+				}
+				// Else (if it's Object, or some custom type) just parse it recursive
+				else
+				{
+					instance[prop] = parseObject( obj[prop], getDefinitionByName( propertyType ) as Class );
+				}
+			}
+
+			return instance;
+		}
+
+		public static function typeStringIsSimple( type : String ) : Boolean
+		{
+			// (See ECMAScript specs)
+			return ( type == "" ||
+					type == "String" ||
+					type == "Number" ||
+					type == "uint" ||
+					type == "int" ||
+					type == "Boolean"
+					);
+		}
+
+		public static function objectIsSimple( obj : * ) : Boolean
+		{
+			return obj is String ||
+					obj is Number ||
+					obj is uint ||
+					obj is int ||
+					obj is Boolean;
+		}
+	}
+}
